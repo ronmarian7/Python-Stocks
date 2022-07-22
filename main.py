@@ -9,14 +9,10 @@ import matplotlib.pyplot as plotter
 from scipy.fft import fft, ifft, fftfreq
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
-import numpy as np
-import matplotlib.pyplot as plt
 import scipy.fftpack
 from scipy.fft import rfft, rfftfreq, irfft
 from datetime import date
 from scipy import signal
-import matplotlib.pyplot as plt
 import math
 import cmath
 from collections import Counter
