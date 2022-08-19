@@ -1,45 +1,12 @@
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import mean_squared_error as mse
-from sklearn.metrics import r2_score
-# import pandas_datareader as web
-import datetime as dt
-
-import tensorflow as tf
-import keras
-from keras.models import Sequential
-from keras.layers import LSTM, Dense, Dropout, Bidirectional
-from keras.callbacks import ModelCheckpoint, TensorBoard
-from sklearn import preprocessing
-from sklearn.model_selection import train_test_split
-# from yfinance import stock_info as si
-from collections import deque
-
 import os
-import numpy as np
-import pandas as pd
 import random
-
-# import chart_studio.plotly as py
-from datetime import date
+import numpy as np
 import yfinance as yf
-import scipy.fft
-import matplotlib.pyplot as plotter
-from scipy.fft import fft, ifft, fftfreq
-import pandas as pd
-import matplotlib.pyplot as plt
-import scipy.fftpack
-from scipy.fft import rfft, rfftfreq, irfft
-from datetime import date
-from scipy import signal
-
-import math
-import cmath
-from collections import Counter
 import statistics as stat
-
-from ML_stock import company, scaled_data, prediction_days, x_train, y_train
+import matplotlib.pyplot as plt
+from collections import deque
+from scipy.fft import fft, ifft, fftfreq
+from datetime import date
 
 
 def plotting_regular_functions_abs_val(x, y, size):
@@ -725,8 +692,7 @@ i = 0
 while (i < len(frq)):
     if (abs(Y_half[i]) > 0):  # whoever answers to the conditions will be represented in the recreated function
         print(f"we have {i} with power of {abs(Y_half[i])}")
-        y += 2 * (abs(Y_half[i])) * np.exp(2j * np.pi * i * x / (
-                    n / 2))  # I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
+        y += 2 * (abs(Y_half[i])) * np.exp(2j * np.pi * i * x / (n / 2))  # I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
     i += 1
 
 plt.plot(x, y)
