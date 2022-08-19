@@ -6,7 +6,6 @@ from sklearn.metrics import r2_score
 # import pandas_datareader as web
 import datetime as dt
 
-
 import tensorflow as tf
 import keras
 from keras.models import Sequential
@@ -44,145 +43,154 @@ import cmath
 from collections import Counter
 import statistics as stat
 
-def ploting_regular_functions_abs_val(x,y,size):
-      plt.figure(num=-10000.0, dpi=size)
-      plt.plot(x, np.abs(y),'k')
-      plt.show()
 
-def ploting_stem_functions_abs_val(x, y, size):
-      plt.figure(num=-100.0, dpi=size)
-      plt.stem(x, np.abs(y), use_line_collection=True)
-      plt.show()
+def plotting_regular_functions_abs_val(x, y, size):
+    plt.figure(num=-10000.0, dpi=size)
+    plt.plot(x, np.abs(y), 'k')
+    plt.show()
 
-def score_of_stock_based_on_recommendations (company_tag):
-      dictionary = {}
-      i=0
-      while (i < company_tag.recommendations["To Grade"].count()):
-            rec = company_tag.recommendations["To Grade"][i]
-            if (dictionary.get(rec) == None):
-                  dictionary[rec] = 1
-            else:
-                  dictionary[rec] += 1
-            i += 1
-      score = 0
-      for rec in dictionary:
-            number_of_item_recorded = dictionary[rec]
-            if(rec == "Hold" or rec == "Positive"):
-                  score += number_of_item_recorded * 3
-            if (rec == "Buy" or rec == "Long-Term Buy"):
-                  score += number_of_item_recorded * 10
-            if (rec == "Overweight" or rec == "Outperform" or rec == "Strong Buy" or rec == "Market Outperform" or rec == "Sector Outperform"):
-                  score += number_of_item_recorded * 12
-            if (rec == "Neutral" or rec == "Perform" or rec == "Market Perform" or rec == "Equal-weight" or rec == "Equal-Weight"):
-                  score += number_of_item_recorded * 0
-            if (rec == "Sell"):
-                  score += number_of_item_recorded * -10
-      average_score = score / company_tag.recommendations["To Grade"].count()
-      print("Based on recommendations of analysts - the total score is:", average_score)
-      print(dictionary)
+
+def plotting_stem_functions_abs_val(x, y, size):
+    plt.figure(num=-100.0, dpi=size)
+    plt.stem(x, np.abs(y), use_line_collection=True)
+    plt.show()
+
+#TODO - set the values to go from specific dates and not all the data dates (from 2012)
+# address the problem that the recommendations are a set greater then 5.
+def score_of_stock_based_on_recommendations(company_tag):
+    dictionary = {}
+    i = 0
+    while (i < company_tag.recommendations["To Grade"].count()):
+        rec = company_tag.recommendations["To Grade"][i]
+        if (dictionary.get(rec) == None):
+            dictionary[rec] = 1
+        else:
+            dictionary[rec] += 1
+        i += 1
+    score = 0
+    for rec in dictionary:
+        number_of_item_recorded = dictionary[rec]
+        if (rec == "Hold" or rec == "Positive"):
+            score += number_of_item_recorded * 3
+        if (rec == "Buy" or rec == "Long-Term Buy"):
+            score += number_of_item_recorded * 10
+        if (
+                rec == "Overweight" or rec == "Outperform" or rec == "Strong Buy" or rec == "Market Outperform" or rec == "Sector Outperform"):
+            score += number_of_item_recorded * 12
+        if (
+                rec == "Neutral" or rec == "Perform" or rec == "Market Perform" or rec == "Equal-weight" or rec == "Equal-Weight"):
+            score += number_of_item_recorded * 0
+        if (rec == "Sell"):
+            score += number_of_item_recorded * -10
+    average_score = score / company_tag.recommendations["To Grade"].count()
+    print("Based on recommendations of analysts - the total score is:", average_score)
+    print(dictionary)
+
 
 def DFT(y):
-      """
+    """
       Function to calculate the
       discrete Fourier Transform
       of a 1D real-valued signal x
       """
 
-      N = len(y)
-      n = np.arange(N)
-      k = n.reshape((N, 1))
-      e = np.exp(-2j * np.pi * k * n / N)
+    N = len(y)
+    n = np.arange(N)
+    k = n.reshape((N, 1))
+    e = np.exp(-2j * np.pi * k * n / N)
 
-      yf = np.dot(e, y)
-      return yf
+    yf = np.dot(e, y)
+    return yf
+
 
 def IDFT(yf):
-      """
+    """
       Function to calculate the
       discrete Fourier Transform
       of a 1D real-valued signal x
       """
 
-      N = len(yf)
-      n = np.arange(N)
-      k = n.reshape((N, 1))
-      e = np.exp(2j * np.pi * k * n / N)
+    N = len(yf)
+    n = np.arange(N)
+    k = n.reshape((N, 1))
+    e = np.exp(2j * np.pi * k * n / N)
 
-      y = np.dot(e, yf)/N
+    y = np.dot(e, yf) / N
 
-      return y
+    return y
+
 
 def print_whole_list(list):
-      i = 0
-      while i<len(list):
-            print (list[i])
-            i+=1
+    i = 0
+    while i < len(list):
+        print(list[i])
+        i += 1
+
 
 def PSD(func):
-      new_func = func * np.conj(func)
-      return new_func
+    new_func = func * np.conj(func)
+    return new_func
 
-def zeros_builder_based_on_samples(x,func):
-      i=0
-      zeros = 1
-      while (i < len(func)):
-            zeros *= (x - i)
-            i+=1
-      return zeros
-def poles_builder_based_on_samples(x,func,value_index):
-      i=0
-      poles = 1
-      while (i < len(func)):
-            if(i!=value_index):
-                  poles *= (value_index - i)
-            i+=1
-      return poles
+# TODO - instead of this function need to make a tylor function to build the polinom
+def zeros_builder_based_on_samples(x, func):
+    i = 0
+    zeros = 1
+    while (i < len(func)):
+        zeros *= (x - i)
+        i += 1
+    return zeros
 
-def building_polinom_for_given_func (x, func, zeros):
-      i = 0
-      polinom = 0
-      while (i < len(func)):
-            polinom += func[i] * (zeros/(x-i))/(poles_builder_based_on_samples(x,func,i))
-            i += 1
-      return polinom
 
-def FWHM(frq ,absY_half):
-      HM = (max(absY_half) - absY_half[len(absY_half)-1]) / 2
-      index_of_maximal_spectrum_val = absY_half.tolist().index(max(absY_half))
-      print(f"The index of maximal value is: {index_of_maximal_spectrum_val}")
-      i = 0
-      entry1 = 0
-      entry2 = 0
-      while i < len(absY_half):
+def poles_builder_based_on_samples(x, func, value_index):
+    i = 0
+    poles = 1
+    while (i < len(func)):
+        if (i != value_index):
+            poles *= (value_index - i)
+        i += 1
+    return poles
 
-            if absY_half[i] >= HM and i <= index_of_maximal_spectrum_val and not(entry1):
 
-                  print (f"\nFRQ1 -> the position of y2, x2 in calc of the linear func will be {i}, {absY_half[i]},{HM}  and y1, x1 will be {i-1} accordingly \n")
-                  m = (absY_half[i]-absY_half[i-1]) / (frq[i] - frq[i-1])
-                  b = absY_half[i] - m*frq[i]
-                  frq_1 = (HM - b) / m
+def building_polinom_for_given_func(x, func, zeros):
+    i = 0
+    polinom = 0
+    while (i < len(func)):
+        polinom += func[i] * (zeros / (x - i)) / (poles_builder_based_on_samples(x, func, i))
+        i += 1
+    return polinom
 
-                  entry1 = 1
 
-            if absY_half[i] <= HM and i >= index_of_maximal_spectrum_val:
-                  print (f"\nFRQ2 -> the position of y2, x2 in calc of the linear func will be {i} and y1, x1 will be {i-1} accordingly \n")
-                  m = (absY_half[i]-absY_half[i-1]) / (frq[i] - frq[i-1])
-                  b = absY_half[i] - m*frq[i]
-                  # frq_2 = (HM - b) / m
-                  frq_2 = frq[i-1] #### THIS IS MOST CERTAINLY NOT CORRECT - WE ASSUME THAT THE HM IS WHERE THE MAXIMUM IS
-                  break
+def FWHM(frq, absY_half):
+    HM = (max(absY_half) - absY_half[len(absY_half) - 1]) / 2
+    index_of_maximal_spectrum_val = absY_half.tolist().index(max(absY_half))
+    print(f"The index of maximal value is: {index_of_maximal_spectrum_val}")
+    i = 0
+    entry1 = 0
+    entry2 = 0
+    while i < len(absY_half):
 
-            i+=1
-      delta_f = frq_2 - frq_1
-      return delta_f
+        if absY_half[i] >= HM and i <= index_of_maximal_spectrum_val and not (entry1):
+            print(
+                f"\nFRQ1 -> the position of y2, x2 in calc of the linear func will be {i}, {absY_half[i]},{HM}  and y1, x1 will be {i - 1} accordingly \n")
+            m = (absY_half[i] - absY_half[i - 1]) / (frq[i] - frq[i - 1])
+            b = absY_half[i] - m * frq[i]
+            frq_1 = (HM - b) / m
 
-def Guessing_Real_Freq(fft_func):
-      new_fft_func = fft_func.copy()
-      i = 0
-      while i < len(new_fft_func):
+            entry1 = 1
 
-            i+=1
-      return new_fft_func
+        if absY_half[i] <= HM and i >= index_of_maximal_spectrum_val:
+            print(
+                f"\nFRQ2 -> the position of y2, x2 in calc of the linear func will be {i} and y1, x1 will be {i - 1} accordingly \n")
+            m = (absY_half[i] - absY_half[i - 1]) / (frq[i] - frq[i - 1])
+            b = absY_half[i] - m * frq[i]
+            # frq_2 = (HM - b) / m
+            frq_2 = frq[i - 1]  #### THIS IS MOST CERTAINLY NOT CORRECT - WE ASSUME THAT THE HM IS WHERE THE MAXIMUM IS
+            break
+
+        i += 1
+    delta_f = frq_2 - frq_1
+    return delta_f
+
 
 # ########################################
 
@@ -306,30 +314,25 @@ def Guessing_Real_Freq(fft_func):
 # plt.show()
 
 
-
 ###     REAL   CODE   BELOW:
-
-
-
 
 
 ###################################################
 
 
 ##########################################################################
-#Load data
+# Load data
 # company = 'FB'
 company = yf.Ticker("CSCO")
 
-start = dt.datetime(2021,1,1)
-end = dt.datetime(2022,1,1)
+start = dt.datetime(2021, 1, 1)
+end = dt.datetime(2022, 1, 1)
 
-# data = web.Datareader(company, 'yahoo', start, end)
-data = company.history(start=start,  end= end)
+data = company.history(start=start, end=end)
 
 # Prepare data
-scaler = MinMaxScaler(feature_range=(0,1))
-scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1,1))
+scaler = MinMaxScaler(feature_range=(0, 1))
+scaled_data = scaler.fit_transform(data['Close'].values.reshape(-1, 1))
 
 prediction_days = 60
 
@@ -337,67 +340,64 @@ x_train = []
 y_train = []
 
 for x in range(prediction_days, len(scaled_data)):
-      x_train.append(scaled_data[x-prediction_days:x,0])
-      y_train.append(scaled_data[x,0])
+    x_train.append(scaled_data[x - prediction_days:x, 0])
+    y_train.append(scaled_data[x, 0])
 
 x_train, y_train = np.array(x_train), np.array(y_train)
-x_train = np.reshape(x_train, (x_train.shape[0],x_train.shape[1],1))
+x_train = np.reshape(x_train, (x_train.shape[0], x_train.shape[1], 1))
 
-#build the model
+# build the model
 
 model = Sequential()
 
-model.add(LSTM(units = 100, return_sequences = True,input_shape = (x_train.shape[1],1)))
+model.add(LSTM(units=100, return_sequences=True, input_shape=(x_train.shape[1], 1)))
 model.add(Dropout(0.2))
-model.add(LSTM(units=100,return_sequences = True))
+model.add(LSTM(units=100, return_sequences=True))
 model.add(Dropout(0.2))
 model.add(LSTM(units=100))
 model.add(Dropout(0.2))
-model.add(Dense(units =1)) #prediction of the next closing price
+model.add(Dense(units=1))  # prediction of the next closing price
 
-model.compile(optimizer = 'adam', loss = 'mean_squared_error')
-model.fit(x_train,y_train, epochs = 100, batch_size=64)
+model.compile(optimizer='adam', loss='mean_squared_error')
+model.fit(x_train, y_train, epochs=100, batch_size=64)
 
 """Test model accuracy on existing data"""
 
-#load test data
-test_start = dt.datetime(2020,1,1)
+# load test data
+test_start = dt.datetime(2020, 1, 1)
 test_end = dt.datetime.now()
 
 # test_data = web.Datareader(company, 'yahoo', test_start, test_end)
-test_data = company.history(start=test_start,  end= test_end)#period = "3mo", interval="1h")
+test_data = company.history(start=test_start, end=test_end)  # period = "3mo", interval="1h")
 actual_prices = test_data['Close'].values
 
-total_dataset = pd.concat((data['Close'],test_data['Close']), axis=0)
+total_dataset = pd.concat((data['Close'], test_data['Close']), axis=0)
 
-model_inputs = total_dataset[len(total_dataset)-len(test_data)-prediction_days:].values
-model_inputs = model_inputs.reshape(-1,1)
+model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
+model_inputs = model_inputs.reshape(-1, 1)
 model_inputs = scaler.transform(model_inputs)
 
 # make prediction on test data
 
 x_test = []
 
-for x in range (prediction_days, len(model_inputs)):
-      x_test.append(model_inputs[x-prediction_days:x, 0])
+for x in range(prediction_days, len(model_inputs)):
+    x_test.append(model_inputs[x - prediction_days:x, 0])
 
 x_test = np.array(x_test)
-x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1],1))
+x_test = np.reshape(x_test, (x_test.shape[0], x_test.shape[1], 1))
 
 prediction_prices = model.predict(x_test)
 prediction_prices = scaler.inverse_transform(prediction_prices)
 
-#plot the test prediction
-plt.plot(actual_prices, color = 'black', label = "actual prices")
-plt.plot(prediction_prices, color = 'green', label = "predicted prices")
+# plot the test prediction
+plt.plot(actual_prices, color='black', label="actual prices")
+plt.plot(prediction_prices, color='green', label="predicted prices")
 plt.title(f"{company} prices")
 plt.xlabel("time")
 plt.ylabel("price")
 plt.legend()
 plt.show()
-
-
-
 
 ###################################################################
 
@@ -405,29 +405,28 @@ plt.show()
 company_tag = yf.Ticker("CSCO")
 
 today = date.today()
-history_data = company_tag.history(period = "1d", interval="1m")  #start="2022-03-14",  end= today)     # stock data assigned
+history_data = company_tag.history(period="1d",
+                                   interval="1m")
+# start="2022-03-14",  end= today)     # stock data assigned
 # history_data = company_tag.history(start="2022-07-22",  end="2022-07-23", interval="1m")
 history_data['Close'].plot(title=f"{company_tag}stock price ($)")
 plt.show()
 
-y_high = np.array([])                                                          # creating array for the regular function
+y_high = np.array([])  # creating array for the regular function
 
-original_value_quantity = history_data["High"].count()                                 #number of values of the function
+original_value_quantity = history_data["High"].count()  # number of values of the function
 print(f"the number of values obtained: {original_value_quantity}")
-
 
 i = 0
 while (i < original_value_quantity):
-      y_high = np.append(y_high, history_data["High"][i])                     # inserting the values of the function into the y_high array to create the actual function
-      i+=1
+    y_high = np.append(y_high, history_data["High"][i])  # inserting the values of the function into the y_high array to create the actual function
+    i += 1
 
-
-
-y_high = y_high[:int(original_value_quantity)-1]
+y_high = y_high[:int(original_value_quantity) - 1]
 # y_high = y_high[int(original_value_quantity/2):]
 
 
-#score_of_stock_based_on_recommendations(company_tag)
+# score_of_stock_based_on_recommendations(company_tag)
 
 #############################################
 
@@ -436,67 +435,56 @@ y_high = y_high[:int(original_value_quantity)-1]
 # zeros = zeros_builder_based_on_samples(x_polinom,y_high)
 # polinom = building_polinom_for_given_func(x_polinom,y_high,zeros)
 #
-# ploting_regular_functions_abs_val(x_polinom, polinom, 100)
+# plotting_regular_functions_abs_val(x_polinom, polinom, 100)
 
 
 #########################################
-
-
 
 
 print(f" sum of y_high is: {sum(y_high)}")
 
 """an experiment of concatenating the same vector of values a few time to itself and then zero padding the result:"""
 
-
-
-y_high_new_mean = sum(y_high)/len(y_high)
-print (f"The mean of all values of the given function PLUS zeros at the end is: {y_high_new_mean}")
+y_high_new_mean = sum(y_high) / len(y_high)
+print(f"The mean of all values of the given function PLUS zeros at the end is: {y_high_new_mean}")
 y_high_final = y_high.copy()
 y_high_final = y_high_final - y_high_new_mean
 
-
-
-
-
-
-
-
 print("HERE COMES YYYYYYYY - STEP")
-i=0
-while i< len(y_high_final)-1:
-      y_high_final[i] = y_high[i+1] - y_high[i]
-      i+=1
-y_high_final[i] = y_high_final[i-1]
+i = 0
+while i < len(y_high_final) - 1:
+    y_high_final[i] = y_high[i + 1] - y_high[i]
+    i += 1
+y_high_final[i] = y_high_final[i - 1]
 
 STEP = y_high_final.copy()
-STEP_mean = sum(STEP)/len(STEP)
-abs_STEP_mean = sum(abs(STEP))/len(STEP)
+STEP_mean = sum(STEP) / len(STEP)
+abs_STEP_mean = sum(abs(STEP)) / len(STEP)
 print(f"\n\nSTEP MEAN IS: {STEP_mean} and the abs_STEP_MEAN IS: {abs_STEP_mean} \n\n")
-x_step = np.arange(0,len(STEP))
-plt.plot(x_step,STEP)
+x_step = np.arange(0, len(STEP))
+plt.plot(x_step, STEP)
 plt.title("STEP function")
 plt.ylabel("Step size")
 plt.xlabel("Step number")
 plt.show()
 
 print("HERE COMES THE SECOND YYYYYYY - SPEED")
-i=0
-while i< len(y_high_final)-1:
-      y_high_final[i] = (abs(y_high_final[i]))# ** 2
-      # y_high_final[i] = (abs(y_high_final[i + 1] - y_high_final[i])) ** 2
-      # y_high_final[i] = y_high_final[i + 1] - y_high_final[i]
-      i+=1
-y_high_final[i] = y_high_final[i-1]
+i = 0
+while i < len(y_high_final) - 1:
+    y_high_final[i] = (abs(y_high_final[i]))  # ** 2
+    # y_high_final[i] = (abs(y_high_final[i + 1] - y_high_final[i])) ** 2
+    # y_high_final[i] = y_high_final[i + 1] - y_high_final[i]
+    i += 1
+y_high_final[i] = y_high_final[i - 1]
 SPEED = y_high_final.copy()
-x_speed = np.arange(0,len(SPEED))
-plt.plot(x_speed,SPEED)
+x_speed = np.arange(0, len(SPEED))
+plt.plot(x_speed, SPEED)
 plt.title("SPEED function")
 plt.ylabel("SPEED size")
 plt.xlabel("SPEED number")
 plt.show()
 
-print(f"\n\n\n\nTHE ENERGY OF THE STOCK IS: {np.dot(SPEED,SPEED)} and the new one is {np.dot(SPEED,SPEED) / abs_STEP_mean} \n\n\n\n\n\n\n")
+print(f"\n\n\n\nTHE ENERGY OF THE STOCK IS: {np.dot(SPEED, SPEED)} and the new one is {np.dot(SPEED, SPEED) / abs_STEP_mean} \n\n\n\n\n\n\n")
 
 # print("HERE COMES THE THIRD YYYYYYY - ACCELERATION")
 # i=0
@@ -535,148 +523,121 @@ print(f"\n\n\n\nTHE ENERGY OF THE STOCK IS: {np.dot(SPEED,SPEED)} and the new on
 ######################
 
 
-y_high_new_mean = sum(y_high_final)/len(y_high_final)                           #FOR PRESENTING BETTER FRQ SHOW +
-y_high_final = y_high_final - y_high_new_mean                                   #IT IS PRESENTED DIFFERENTLY IN THE SIGNAL PRESENTATION SINCE IT IS SUBSTRACTED BEFORE.
-
-
-
-
-
-
-
-
+y_high_new_mean = sum(y_high_final) / len(y_high_final)  # FOR PRESENTING BETTER FRQ SHOW +
+y_high_final = y_high_final - y_high_new_mean  # IT IS PRESENTED DIFFERENTLY IN THE SIGNAL PRESENTATION SINCE IT IS SUBSTRACTED BEFORE.
 
 multi_concat = 1
 number_of_concat = multi_concat
-y_high_new = np.hstack([y_high_final] * number_of_concat)                                         # the actual concat - everytime it grows with 1
+y_high_new = np.hstack([y_high_final] * number_of_concat)  # the actual concat - everytime it grows with 1
 """end of concat"""
 
 multi_zero = 10
-number_of_values_wanted = multi_zero * len(y_high_new)                                                               # for better characterization in fft
+number_of_values_wanted = multi_zero * len(y_high_new)  # for better characterization in fft
 number_of_zeros = number_of_values_wanted - len(y_high_new)
 
-i=0
-while i < number_of_zeros:                                                                #inserting zeros at the end of y_high function vector to maitain a better freq picture.
-      y_high_new = np.append(y_high_new, 0)
-      i= i+1
+i = 0
+while i < number_of_zeros:  # inserting zeros at the end of y_high function vector to maitain a better freq picture.
+    y_high_new = np.append(y_high_new, 0)
+    i = i + 1
 
-multi = multi_zero*multi_concat
+multi = multi_zero * multi_concat
 
 y_high_final = y_high_new.copy()
 ####################################################################
 
 
-
-
-
-
-#the last test I did - quite successful - NEST TIME PRINTING WITH SIN INSTEAD OF EXP
+# the last test I did - quite successful - NEST TIME PRINTING WITH SIN INSTEAD OF EXP
 
 
 Fs = float(len(y_high_final))  # range of sampling from 0
-Ts = 1.0 # what will be the sampling rate when considering THE FUCKING FREQUENCIES OF THE SYSTEM.
-t = np.arange(0,Fs,Ts) # time vector
-
+Ts = 1.0  # what will be the sampling rate when considering THE FUCKING FREQUENCIES OF THE SYSTEM.
+t = np.arange(0, Fs, Ts)  # time vector
 
 y = y_high_final.copy()
-plt.plot(t,y)#####################################################
+plt.plot(t, y)  #####################################################
 # plt.show()
 
 
-
-
-n = len(y)                                      # length of the signal we created = Fs/Ts
-k = np.arange(n)                                #basically, an array the length of the signal we generated but it goes like: 0,1,2,3,... not acording to frequencies
-T = n*Ts                                        # we normalize the number of original - we divide the length of the signal after sampling it in the number of samples we wanted
-frq = k/T                                       # two sides frequency range
-frq = frq[:len(frq)//2]                         # one side frequency range
-Y = np.fft.fft(y)                               # dft and normalization
+n = len(y)  # length of the signal we created = Fs/Ts
+k = np.arange(
+    n)  # basically, an array the length of the signal we generated but it goes like: 0,1,2,3,... not acording to frequencies
+T = n * Ts  # we normalize the number of original - we divide the length of the signal after sampling it in the number of samples we wanted
+frq = k / T  # two sides frequency range
+frq = frq[:len(frq) // 2]  # one side frequency range
+Y = np.fft.fft(y)  # dft and normalization
 Y_half = Y[:n // 2]
 a = np.angle(Y)
 a_half = a[:n // 2]
 
-
 y_new = 0
-The_length_I_want_to_see = Fs ################ DO THE SAME IN THE TESTING SIGNAL TO CHECK IT OUT!!!!!!!
-steps = The_length_I_want_to_see/len(y)
-x = np.arange(0,The_length_I_want_to_see,steps) # BUILDING THE EXACT SAME VECTOR THAT WAS FOR THE ORIGINAL SIGNAL - t....
+The_length_I_want_to_see = Fs  ################ DO THE SAME IN THE TESTING SIGNAL TO CHECK IT OUT!!!!!!!
+steps = The_length_I_want_to_see / len(y)
+x = np.arange(0, The_length_I_want_to_see,
+              steps)  # BUILDING THE EXACT SAME VECTOR THAT WAS FOR THE ORIGINAL SIGNAL - t....
 maximum = max(abs(Y_half))
 
 TOP_REACHED = 0
 
 i = 0
 while (i < len(frq)):
-      if (abs(Y_half[i]) > 0.75*maximum):            # whoever answers to the conditions will be represented in the recreated function
-      # if (i < 16):
-            print(f"we have frequency {i/(Fs*multi)} with the value of {abs(Y_half[i])}")
-            if i == 0 or i == (len(frq)-1):
-                  y_new += (abs(Y_half[i]) / n) * np.cos(2 * np.pi * (i / Fs) * x + a[i])
-            else:
-                  y_new += 2 * (abs(Y_half[i]) / n) * np.cos(2 * np.pi * (i / Fs) * x + a[i])    #I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
-      i+=1
+    if (abs(Y_half[
+                i]) > 0.75 * maximum):  # whoever answers to the conditions will be represented in the recreated function
+        # if (i < 16):
+        print(f"we have frequency {i / (Fs * multi)} with the value of {abs(Y_half[i])}")
+        if i == 0 or i == (len(frq) - 1):
+            y_new += (abs(Y_half[i]) / n) * np.cos(2 * np.pi * (i / Fs) * x + a[i])
+        else:
+            y_new += 2 * (abs(Y_half[i]) / n) * np.cos(2 * np.pi * (i / Fs) * x + a[
+                i])  # I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
+    i += 1
 
 print_whole_list(abs(Y_half))
 
-plt.plot(x,y_new)#################################################
-i=0
+plt.plot(x, y_new)  #################################################
+i = 0
 diff = []
-while (i<len(y_new)):
-      diff.append(y[i] - y_new[i])
-      i+=1
+while (i < len(y_new)):
+    diff.append(y[i] - y_new[i])
+    i += 1
 
-print (f"VAR of diff is: {stat.variance(diff)} and Estimation is: {stat.mean(diff)} ,  {stat.fmean(diff)}")
+print(f"VAR of diff is: {stat.variance(diff)} and Estimation is: {stat.mean(diff)} ,  {stat.fmean(diff)}")
 
-plt.plot(x,diff)###################################################
+plt.plot(x, diff)  ###################################################
 plt.legend(["first one", "second one", "difference"])
 plt.show()
 
-
-
-
-
-plt.plot(frq, abs(Y_half))                             # plotting the spectrum
+plt.plot(frq, abs(Y_half))  # plotting the spectrum
 plt.xlabel('Freq (Hz)')
 plt.ylabel('|Y(freq)|')
 plt.title("Amplitude of fft")
 plt.show()
 
 delta_f = FWHM(frq, abs(Y_half))
-print("delta f is",delta_f)
-delta_tc = 1/delta_f
+print("delta f is", delta_f)
+delta_tc = 1 / delta_f
 print(f"\n\nTHE NUMBER OF SAMPLES RELEVANT TO IT IS {delta_tc}\n\n")
 
-
-plt.plot(frq, a_half)                                  #ploting the phase of the fft
+plt.plot(frq, a_half)  # ploting the phase of the fft
 plt.xlabel('Freq (Hz)')
 plt.ylabel('Arg (frq)')
 plt.title("Phase of fft")
 plt.show()
 
-
-
-
-
-
-
-
-
 ####################################################################
 new_value_quantity = len(y_high_final)
 
-
 """using FFT here and not calculating by hand:"""
 
-yf = np.fft.fft(y_high_final)                                # Here we get good values for the
+yf = np.fft.fft(y_high_final)  # Here we get good values for the
 xf = np.fft.fftfreq(len(yf))
 
-plt.plot(xf,yf)                                    #####AMAZING... SINC FUNC
+plt.plot(xf, yf)  #####AMAZING... SINC FUNC
 plt.show()
-
 
 """plotting something"""
 sampling_rate = 1.0
 # calculate the frequency
-N = len(yf)                                                        #when fft is done we need to take the whole new signal range not the original
+N = len(yf)  # when fft is done we need to take the whole new signal range not the original
 print("len of yf is:::::::::::::::", N)
 n = np.arange(N)
 T_sampling = 1.0
@@ -685,14 +646,14 @@ freq = n / T_sampling
 ############################################
 
 """correcting the FOURIER TRANSFORM from symmetrical to a good one with proper values"""
-n_oneside = N//2
+n_oneside = N // 2
 # get the one side frequency
-f_oneside = freq[:len(freq)//2]
+f_oneside = freq[:len(freq) // 2]
 
 # normalize the amplitude
 yf_func_oneside = yf[:n_oneside] / n_oneside
 
-plt.figure(figsize = (12, 6))
+plt.figure(figsize=(12, 6))
 plt.subplot(121)
 plt.stem(f_oneside, abs(yf_func_oneside), 'b', markerfmt=" ", basefmt="-b")
 plt.xlabel('Freq (Hz)')
@@ -700,9 +661,7 @@ plt.ylabel('DFT Amplitude |X(freq)|')
 
 plt.show()
 
-ploting_regular_functions_abs_val(f_oneside, abs(yf_func_oneside), 120)
-
-
+plotting_regular_functions_abs_val(f_oneside, abs(yf_func_oneside), 120)
 
 no_hill_func = yf_func_oneside.copy()
 number_of_hills = 0
@@ -710,24 +669,23 @@ number_of_hills_wanted = 4
 number_of_freq_of_zero = 0
 i = 1
 while (i < len(no_hill_func)):
-      if (number_of_hills == number_of_hills_wanted):
-            no_hill_func[i] = 0
-            number_of_freq_of_zero += 1
-      elif (i == len(no_hill_func) - 1):
-            no_hill_func[i] = 0
-            break
-      elif (abs(no_hill_func[i]) < abs(no_hill_func[i + 1]) and abs(no_hill_func[i]) < abs(no_hill_func[i - 1])):
-            number_of_hills += 1
+    if (number_of_hills == number_of_hills_wanted):
+        no_hill_func[i] = 0
+        number_of_freq_of_zero += 1
+    elif (i == len(no_hill_func) - 1):
+        no_hill_func[i] = 0
+        break
+    elif (abs(no_hill_func[i]) < abs(no_hill_func[i + 1]) and abs(no_hill_func[i]) < abs(no_hill_func[i - 1])):
+        number_of_hills += 1
 
-      i+=1
-      print(f"the number of freqs included not zeros:{number_of_values_wanted - number_of_freq_of_zero}")
-no_hill_func_fft = np.fft.ifft(no_hill_func)                          ######THIS DOESNT WORK BECAUSE I NEED ONLY THE NUMBER OF SAMPLES AND I HAVE GOT A LOT MORE!
+    i += 1
+    print(f"the number of freqs included not zeros:{number_of_values_wanted - number_of_freq_of_zero}")
+no_hill_func_fft = np.fft.ifft(
+    no_hill_func)  ######THIS DOESNT WORK BECAUSE I NEED ONLY THE NUMBER OF SAMPLES AND I HAVE GOT A LOT MORE!
 x_no_hill = np.arange(len(no_hill_func_fft))
 
-# ploting_regular_functions_abs_val(x_no_hill, no_hill_func_fft, 170)
+# plotting_regular_functions_abs_val(x_no_hill, no_hill_func_fft, 170)
 # ploting_stem_functions_abs_val(x_no_hill, no_hill_func_fft, 170)
-
-
 
 
 """SAMPLING THE FREQUENCY REPRESENTATION OF THE SIGNAL"""
@@ -741,24 +699,24 @@ newly_yf_TEST2 = []
 fs_tracker = 1
 counter_of_samles_so_far = 0
 i = 0
-while i<len(yf):
-      if i == fs_tracker:
-           newly_yf_TEST2.append(yf[i])
-           counter_of_samles_so_far += 1
-           fs_tracker += fs
-      i+=1
+while i < len(yf):
+    if i == fs_tracker:
+        newly_yf_TEST2.append(yf[i])
+        counter_of_samles_so_far += 1
+        fs_tracker += fs
+    i += 1
 print(f"counter of samples so far:::::::{counter_of_samles_so_far}")
 # print_whole_list(newly_yf_TEST2)
 
 newly_y_TEST2 = ifft(newly_yf_TEST2)
 newly_x_TEST2 = np.arange(len(newly_y_TEST2))
 
-# ploting_regular_functions_abs_val(newly_x_TEST2, newly_y_TEST2, 70)
+# plotting_regular_functions_abs_val(newly_x_TEST2, newly_y_TEST2, 70)
 
 
 """HERE I CLEAR THE FREQUENCY FUNCTION FROM NOISE SUPPOSEDLY"""
 """recreating the sinusoidal function to recommend on buying or selling"""
-i = 0                                                                            # When concating - clears all but spikey freqs
+i = 0  # When concating - clears all but spikey freqs
 sum = 0
 number_of_frequencies_wanted = 1000
 ratio_between_neighbors = 1
@@ -766,31 +724,28 @@ yf_clean = yf_func_oneside.copy()
 is_it_first_freq = 0
 while i < yf_func_oneside.size:
 
-      if (sum == number_of_frequencies_wanted):
-           yf_clean[i] = 0
-           i += 1
-           continue
-      if (i == 0 or i == yf_func_oneside.size - 1):
-            yf_clean [i] = 0
-            i += 1
-            continue
-      elif ((abs(yf_func_oneside[i]) > ratio_between_neighbors * abs(yf_func_oneside[i-1])) and (abs(yf_func_oneside[i]) > ratio_between_neighbors * abs(yf_func_oneside[i+1]))):
-            sum += 1
-            if (is_it_first_freq == 0):
-                  first_freq_size = abs(yf_func_oneside[i])
-            is_it_first_freq = 1
-            print(f"THE NUMBER IS {i} AND IT POWER IS {abs(yf_func_oneside[i])} AND THE RATIO TO FIRST FREQ IS: {first_freq_size / abs(yf_func_oneside[i])}")
-            i += 1
-
-
-      else:
-            yf_clean[i] = 0
-            i += 1
+    if (sum == number_of_frequencies_wanted):
+        yf_clean[i] = 0
+        i += 1
+        continue
+    if (i == 0 or i == yf_func_oneside.size - 1):
+        yf_clean[i] = 0
+        i += 1
+        continue
+    elif ((abs(yf_func_oneside[i]) > ratio_between_neighbors * abs(yf_func_oneside[i - 1]))
+          and (abs(yf_func_oneside[i]) > ratio_between_neighbors * abs(yf_func_oneside[i + 1]))):
+        sum += 1
+        if (is_it_first_freq == 0):
+            first_freq_size = abs(yf_func_oneside[i])
+        is_it_first_freq = 1
+        print(
+            f"THE NUMBER IS {i} AND IT POWER IS {abs(yf_func_oneside[i])} AND THE RATIO TO FIRST FREQ IS: {first_freq_size / abs(yf_func_oneside[i])}")
+        i += 1
+    else:
+        yf_clean[i] = 0
+        i += 1
 
 print(f"Number of spikes found, INCLUDING those who are neighbors : {sum}")
-
-
-
 
 yf_clean_extra_zeros = yf_clean.copy()
 # i = 0
@@ -812,11 +767,6 @@ yf_clean_extra_zeros = yf_clean.copy()
 #       else:
 #             final_func_TEST.append(0)
 #       i+=1
-
-
-
-
-
 
 
 # i = 0
@@ -841,30 +791,30 @@ yf_clean_extra_zeros = yf_clean.copy()
 # plt.show()
 #############################################################################3
 
-n = len(yf)                                  # length of the signal we created
-k = np.arange(n)                              #basically, an array the length of the signal we generated but it goes like: 0,1,2,3,... not acording to frequencies
-T = n/n                                        # we normalize the number of original - we divide the length of the signal after sampling it in the number of samples we wanted
-frq = k/T                                       # two sides frequency range
-frq = frq[:len(frq)//2]                          # one side frequency range
-Y_half = yf / n                              # dft and normalization
+n = len(yf)  # length of the signal we created
+k = np.arange(n)  # basically, an array the length of the signal we generated but it goes like: 0,1,2,3,... not acording to frequencies
+T = n / n  # we normalize the number of original - we divide the length of the signal after sampling it in the number of samples we wanted
+frq = k / T  # two sides frequency range
+frq = frq[:len(frq) // 2]  # one side frequency range
+Y_half = yf / n  # dft and normalization
 Y_half = Y_half[:n // 2]
 
-plt.plot(frq, abs(Y_half))                             # plotting the spectrum
+plt.plot(frq, abs(Y_half))  # plotting the spectrum
 plt.xlabel('Freq (Hz)')
 plt.ylabel('|Y(freq)|')
 plt.title('THE FUCKING GREATEST FUCKING GRAPH EVER!!!!!')
 plt.show()
 
-y = 0 
-length_wanted = n*3
-x = np.arange(0,length_wanted,1)
+y = 0
+length_wanted = n * 3
+x = np.arange(0, length_wanted, 1)
 i = 0
-while (i< len(frq)):
-      if (abs(Y_half[i]) > 0):            # whoever answers to the conditions will be represented in the recreated function
-            print(f"we have {i} with power of {abs(Y_half[i])}")
-            y += 2 * (abs(Y_half[i])) * np.exp(2j * np.pi * i * x / (n / 2))    #I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
-      i+=1
+while (i < len(frq)):
+    if (abs(Y_half[i]) > 0):  # whoever answers to the conditions will be represented in the recreated function
+        print(f"we have {i} with power of {abs(Y_half[i])}")
+        y += 2 * (abs(Y_half[i])) * np.exp(2j * np.pi * i * x / (
+                    n / 2))  # I had to multiply by 2 because of the division in 2 of the frequency I BELIEVE - thats how it works.
+    i += 1
 
-plt.plot(x,y)
+plt.plot(x, y)
 plt.show()
-
