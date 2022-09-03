@@ -8,7 +8,7 @@ from collections import deque
 from scipy.fft import fft, ifft, fftfreq
 from datetime import date
 
-
+# for testing pushes - delete after 
 #TODO - set the values to go from specific dates and not all the data dates (from 2012)
 # address the problem that the recommendations are a set greater then 5.
 def score_of_stock_based_on_recommendations(company_tag):
