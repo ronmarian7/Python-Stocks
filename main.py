@@ -95,12 +95,29 @@ def fetch_plot_close_column(ticker_name: str):
     plt.show()
     return(history_data)
 
+def ZeroToMastery(huge_vector):
+    #set random seed
+    tf.random.set_seed(42)
+
+    #1. create the model using sequential API
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(1)
+    ])
+
+    #2. compile the model
+    model.compile(loss = tf.keras.losses.mae,
+                  optimizer = tf.keras.oprtimizers.SGD(),
+                  metrics = ["mae"])
+
+    #3. fit the model
+    model.fit(x, y, epochs= 100)
+
 def SLTM_ML(company_tag: str):
 
     # Load data
     company = yf.Ticker(company_tag)
 
-    start = dt.datetime(2021, 1, 1)
+    start = dt.datetime(2021, 9, 1)
     end = dt.datetime(2022, 1, 1)
 
     data = company.history(start=start, end=end)
